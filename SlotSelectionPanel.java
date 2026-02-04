@@ -76,7 +76,7 @@ public class SlotSelectionPanel extends JPanel {
                          	// Confirms if the payment was successful or not
                          	if (paid) {
                                  // Occupy slot after payment
-                                 SlotManager.occupySlot(type, slotNumber);
+                                 SlotManager.occupySlot(type, slotNumber, UserSession.getUser());
                                  updateSlotColor(slotButton, type, slotNumber);
                                  
                                  // Gives out ticket after successful payment
@@ -99,8 +99,17 @@ public class SlotSelectionPanel extends JPanel {
 
                     // Remove Vehicles
                     else if (mode == SlotManager.Mode.REMOVE) {
-
                         if (SlotManager.isOccupied(type, slotNumber)) {
+                        	 ParkingSlot slot = SlotManager.getSlot(type, slotNumber);
+                             if (!UserSession.isAdmin() && !slot.getOwner().equals(UserSession.getUser())) {
+                                 JOptionPane.showMessageDialog(
+                                     slotButton,
+                                     "You cannot remove another user's vehicle!",
+                                     "Access Denied",
+                                     JOptionPane.WARNING_MESSAGE
+                                 );
+                                 return;
+                             }
                         	
                         	// Action Confirmation on removing vehicles
                             int confirm = JOptionPane.showConfirmDialog(
@@ -156,9 +165,11 @@ public class SlotSelectionPanel extends JPanel {
     
     // Changes the button color when occupied or removed a vehicle
     private void updateSlotColor(JButton button, String type, int slotNumber) {
+    	// Turns red if occupied
         if (SlotManager.isOccupied(type, slotNumber)) {
             button.setBackground(Color.red);
             button.setForeground(Color.black);
+            // Turns Green if unoccupied
         } else {
             button.setBackground(Color.green);
             button.setForeground(Color.white);
