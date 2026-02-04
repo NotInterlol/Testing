@@ -17,6 +17,7 @@ public class MainMenuPanel extends JPanel {
         
         JButton parkButton = new JButton("Park Vehicle");
         JButton unparkButton = new JButton("Unpark My Vehicle");
+        JButton removeButton = new JButton("Remove Vehicle");
         JButton logoutButton = new JButton("Log out");
         
 
@@ -44,15 +45,26 @@ public class MainMenuPanel extends JPanel {
         });
         add(parkButton);
         
-        // Unpark Vehicle
-    	unparkButton.setBounds(centerX, startY + buttonHeight + gap, buttonWidth, buttonHeight);
-        styleButton(unparkButton, btnFont, btnColor);
-        unparkButton.addActionListener(e -> {
-            SlotManager.setMode(SlotManager.Mode.REMOVE);
-            frame.showParkSelection();
-        });
-        add(unparkButton);
-        
+        // Check if user is admin
+        // If user is admin allow removing vehicles of other users else unpark button for normal users
+        if (UserSession.isAdmin()) {
+            removeButton.setBounds(centerX, startY + buttonHeight + gap, buttonWidth, buttonHeight);
+            styleButton(removeButton, btnFont, btnColor);
+            removeButton.addActionListener(e -> {
+                SlotManager.setMode(SlotManager.Mode.REMOVE);
+                frame.showParkSelection();
+            });
+            add(removeButton);
+        } else {
+            unparkButton.setBounds(centerX, startY + buttonHeight + gap, buttonWidth, buttonHeight);
+            styleButton(unparkButton, btnFont, btnColor);
+            unparkButton.addActionListener(e -> {
+                SlotManager.setMode(SlotManager.Mode.REMOVE);
+                frame.showParkSelection();
+            });
+            add(unparkButton);
+        }
+     
         // Logout Button
         logoutButton.setBounds(centerX, 600, buttonWidth, buttonHeight);
         styleButton(logoutButton, btnFont, btnColor);
