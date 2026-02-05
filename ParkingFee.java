@@ -71,10 +71,11 @@ public class ParkingFee {
     	// Provide 10% discount for PWD and Senior slots
     	switch (slotType.toUpperCase()) {
     		case "PWD":
-    		case "Senior":
+    		case "SENIOR":
     			return PARKING_FEE * 0.9;
     		default:
     			return PARKING_FEE;
     	}
     }
 }
+
