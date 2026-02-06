@@ -13,7 +13,7 @@ public class ParkingFee {
     	while (true) {
             String input = JOptionPane.showInputDialog(
                     null,
-                    "Parking fee: PHP " + amount + "\nEnter payment amount:",
+                    "Parking fee: PHP " + String.format("%.2f", amount) + "\nEnter payment amount:",
                     "Payment",
                     JOptionPane.PLAIN_MESSAGE
             );
@@ -78,4 +78,5 @@ public class ParkingFee {
     	}
     }
 }
+
 
