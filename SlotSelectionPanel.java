@@ -152,7 +152,8 @@ public class SlotSelectionPanel extends JPanel {
 	                            long allowedSeconds = 10; // Penalty After 10 Seconds
 	                            long totalSeconds = duration.getSeconds(); 
 	                            double penalty = 0;
-	
+
+								// Checks if user is admin or customer and applies penalty payment if the user is customer
 	                            if (!UserSession.isAdmin() && totalSeconds > allowedSeconds) {
 	                                long excessSeconds = totalSeconds - allowedSeconds;
 	                                long intervals = (long) Math.ceil(excessSeconds / 10.0);
@@ -167,8 +168,7 @@ public class SlotSelectionPanel extends JPanel {
 	                                                    "\nPlease enter the amount to pay:"
 	                                    );
 	                                    
-	                                    // Force users to pay through looping
-	                                    
+	                                    // Force users to pay through looping                                 
 	                                    if (input == null) {
 	                                        JOptionPane.showMessageDialog(
 	                                                slotButton,
@@ -176,6 +176,7 @@ public class SlotSelectionPanel extends JPanel {
 	                                                "Payment Required",
 	                                                JOptionPane.WARNING_MESSAGE
 	                                        );
+										
 	                                    } else {
 	                                        try {
 	                                            double paidAmount = Double.parseDouble(input);
@@ -192,6 +193,7 @@ public class SlotSelectionPanel extends JPanel {
 	                                                        "Payment Successful",
 	                                                        JOptionPane.INFORMATION_MESSAGE
 	                                                );
+												// Check if the user paid the necessary amount
 	                                            } else {
 	                                                JOptionPane.showMessageDialog(
 	                                                        slotButton,
@@ -200,6 +202,8 @@ public class SlotSelectionPanel extends JPanel {
 	                                                        JOptionPane.WARNING_MESSAGE
 	                                                );
 	                                            }
+												
+											// Error handler for incorrect inputs
 	                                        } catch (NumberFormatException ex) {
 	                                            JOptionPane.showMessageDialog(
 	                                                    slotButton,
@@ -209,7 +213,7 @@ public class SlotSelectionPanel extends JPanel {
 	                                            );
 	                                        }
 	                                    }
-	                                } // For Testing Purposes
+	                                } 
 	                            }
                           
                             // removes vehicle from the slot if chosen the option "Yes" refer to line 100
@@ -270,3 +274,4 @@ public class SlotSelectionPanel extends JPanel {
         }
     }
 }
+
