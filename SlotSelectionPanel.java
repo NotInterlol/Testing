@@ -158,8 +158,60 @@ public class SlotSelectionPanel extends JPanel {
 	                                long intervals = (long) Math.ceil(excessSeconds / 10.0);
 	                                penalty = intervals * 20; // Continuously add 20 Pesos per 10 seconds
 	                                
-	                            } // For Testing Purposes
-                            
+	                                // Manual payment input
+	                                boolean validPayment = false;
+	                                while (!validPayment) {
+	                                    String input = JOptionPane.showInputDialog(
+	                                            slotButton,
+	                                            "Your penalty for exceeding time is ₱" + String.format("%.2f", penalty) +
+	                                                    "\nPlease enter the amount to pay:"
+	                                    );
+	                                    
+	                                    // Force users to pay through looping
+	                                    
+	                                    if (input == null) {
+	                                        JOptionPane.showMessageDialog(
+	                                                slotButton,
+	                                                "You must pay the penalty to unpark your vehicle.",
+	                                                "Payment Required",
+	                                                JOptionPane.WARNING_MESSAGE
+	                                        );
+	                                    } else {
+	                                        try {
+	                                            double paidAmount = Double.parseDouble(input);
+	                                            if (paidAmount >= penalty) {
+	                                                validPayment = true;
+	                                                double change = paidAmount - penalty; // calculate change if overpaid
+	                                                String message = "Payment of ₱" + String.format("%.2f", paidAmount) + " accepted.";
+	                                                if (change > 0) {
+	                                                    message += "\nYour change: ₱" + String.format("%.2f", change);
+	                                                }
+	                                                JOptionPane.showMessageDialog(
+	                                                        slotButton,
+	                                                        message,
+	                                                        "Payment Successful",
+	                                                        JOptionPane.INFORMATION_MESSAGE
+	                                                );
+	                                            } else {
+	                                                JOptionPane.showMessageDialog(
+	                                                        slotButton,
+	                                                        "The amount entered is less than the penalty. Please enter at least ₱" + String.format("%.2f", penalty),
+	                                                        "Insufficient Payment",
+	                                                        JOptionPane.WARNING_MESSAGE
+	                                                );
+	                                            }
+	                                        } catch (NumberFormatException ex) {
+	                                            JOptionPane.showMessageDialog(
+	                                                    slotButton,
+	                                                    "Invalid input. Please enter a number.",
+	                                                    "Invalid Input",
+	                                                    JOptionPane.WARNING_MESSAGE
+	                                            );
+	                                        }
+	                                    }
+	                                } // For Testing Purposes
+	                            }
+                          
                             // removes vehicle from the slot if chosen the option "Yes" refer to line 100
                             if (confirm == JOptionPane.YES_OPTION) {
 
@@ -169,8 +221,7 @@ public class SlotSelectionPanel extends JPanel {
                                 JOptionPane.showMessageDialog(
                                 	    slotButton,
                                 	    "Slot successfully freed." +
-                                	    "\nFreed at: " + formattedDateTime + 
-                                	    (!UserSession.isAdmin() ? "\nPenalty for exceeding time: " + String.format("%.2f", penalty) : ""),
+                                	    "\nFreed at: " + formattedDateTime, 
                                 	    "Removed",
                                 	    JOptionPane.INFORMATION_MESSAGE
                                 	);
@@ -219,4 +270,3 @@ public class SlotSelectionPanel extends JPanel {
         }
     }
 }
-
