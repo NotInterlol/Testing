@@ -98,7 +98,7 @@ public class SlotSelectionPanel extends JPanel {
                                          slotButton,
                                          "You have received a parking ticket for " + type + " Slot " + slotNumber +
                                          "\nTaken at: " + formattedDateTime +
-                                         "\nPlease note that you will be charged 20 PHP for exceeding the time limit" +
+  /*Removes Message for Admins -> */     (!UserSession.isAdmin() ? "\nPlease note that you will be charged 20 PHP for exceeding the time limit" : "") +
                                          "\n\nPlease keep it for reference.",                                       
                                          "Parking Ticket",
                                          JOptionPane.INFORMATION_MESSAGE
@@ -148,16 +148,17 @@ public class SlotSelectionPanel extends JPanel {
                                                       
                             // Penalty Calculation
                             Duration duration = Duration.between(parkedAt, now); // Calculates when the parking occurred compared to now
-                            long allowedSeconds = 10; // Penalty After 10 Seconds
-                            long totalSeconds = duration.getSeconds(); 
-                            double penalty = 0;
-
-                            if (totalSeconds > allowedSeconds) {
-                                long excessSeconds = totalSeconds - allowedSeconds;
-                                long intervals = (long) Math.ceil(excessSeconds / 10.0);
-                                penalty = intervals * 20; // Continuously add 20 Pesos per 10 seconds
-                                
-                            } // For Testing Purposes
+                            
+	                            long allowedSeconds = 10; // Penalty After 10 Seconds
+	                            long totalSeconds = duration.getSeconds(); 
+	                            double penalty = 0;
+	
+	                            if (!UserSession.isAdmin() && totalSeconds > allowedSeconds) {
+	                                long excessSeconds = totalSeconds - allowedSeconds;
+	                                long intervals = (long) Math.ceil(excessSeconds / 10.0);
+	                                penalty = intervals * 20; // Continuously add 20 Pesos per 10 seconds
+	                                
+	                            } // For Testing Purposes
                             
                         /*  Duration duration = Duration.between(parkedAt, now);
                             long totalMinutes = duration.toMinutes();
@@ -178,13 +179,13 @@ public class SlotSelectionPanel extends JPanel {
                                 updateSlotColor(slotButton, type, slotNumber);
 
                                 JOptionPane.showMessageDialog(
-                                        slotButton,
-                                        "Slot successfully freed." +
-                                        "\nFreed at: " + formattedDateTime + 
-                                        "\nPenalty for exceeding time: " + penalty,
-                                        "Removed",
-                                        JOptionPane.INFORMATION_MESSAGE
-                                );
+                                	    slotButton,
+                                	    "Slot successfully freed." +
+                                	    "\nFreed at: " + formattedDateTime + 
+                                	    (!UserSession.isAdmin() ? "\nPenalty for exceeding time: " + penalty : ""),
+                                	    "Removed",
+                                	    JOptionPane.INFORMATION_MESSAGE
+                                	);
                             }
                             
                             // Tells the user that the parking slot is already empty
