@@ -151,13 +151,6 @@ public class SlotSelectionPanel extends JPanel {
                                 SlotManager.freeSlot(type, slotNumber);
                                 updateSlotColor(slotButton, type, slotNumber);
 
-                                JOptionPane.showMessageDialog(
-                                        slotButton,
-                                        "Slot successfully freed." +
-                                                "\nFreed at: " + formattedDateTime,
-                                        "Removed",
-                                        JOptionPane.INFORMATION_MESSAGE
-                                );
                             }            
                             
                             // removes vehicle from the slot if chosen the option "Yes" refer to line 100
