@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.Duration;
 
 public class SlotSelectionPanel extends JPanel {
 
@@ -81,22 +82,24 @@ public class SlotSelectionPanel extends JPanel {
                         	}
                          	// Confirms if the payment was successful or not
                          	if (paid) {
+                         		
                                  // Occupy slot after payment
                                  SlotManager.occupySlot(type, slotNumber, UserSession.getUser());
                                  updateSlotColor(slotButton, type, slotNumber);
                                                          
                                  // Added Timestamp to determine when the parking slot was taken
-                                 LocalDateTime now = LocalDateTime.now();
+                                 LocalDateTime now = LocalDateTime.now(); // Checks the local time
                                  DateTimeFormatter formatter =
-                                         DateTimeFormatter.ofPattern("h:mm a 'on' MMMM d, yyyy");
-                                 String formattedDateTime = now.format(formatter);
+                                         DateTimeFormatter.ofPattern("h:mm a 'on' MMMM d, yyyy"); // Shows when the parking/unparking occurred	
+                                 String formattedDateTime = now.format(formatter); // converts into string 
                                  
                                  // Gives out ticket after successful payment
                                  JOptionPane.showMessageDialog(
                                          slotButton,
                                          "You have received a parking ticket for " + type + " Slot " + slotNumber +
                                          "\nTaken at: " + formattedDateTime +
-                                         "\n\nPlease keep it for reference.",
+                                         "\nPlease note that you will be charged 20 PHP for exceeding the time limit" +
+                                         "\n\nPlease keep it for reference.",                                       
                                          "Parking Ticket",
                                          JOptionPane.INFORMATION_MESSAGE
                                  );
@@ -133,6 +136,41 @@ public class SlotSelectionPanel extends JPanel {
                                     JOptionPane.YES_NO_OPTION
                             );
                             
+                            // Added Timestamp to determine when the parking slot was freed;                            
+                            slot = SlotManager.getSlot(type, slotNumber);
+                            
+                            
+                            LocalDateTime parkedAt = slot.getParkedAt(); // retrieves from slot manager when vehicle was parked/freed
+                            LocalDateTime now = LocalDateTime.now(); // Checks the local time
+                            DateTimeFormatter formatter =
+                                    DateTimeFormatter.ofPattern("h:mm a 'on' MMMM d, yyyy"); // Shows when the parking/unparking occurred
+                            String formattedDateTime = now.format(formatter); // Converts into String
+                                                      
+                            // Penalty Calculation
+                            Duration duration = Duration.between(parkedAt, now); // Calculates when the parking occurred compared to now
+                            long allowedSeconds = 10; // Penalty After 10 Seconds
+                            long totalSeconds = duration.getSeconds(); 
+                            double penalty = 0;
+
+                            if (totalSeconds > allowedSeconds) {
+                                long excessSeconds = totalSeconds - allowedSeconds;
+                                long intervals = (long) Math.ceil(excessSeconds / 10.0);
+                                penalty = intervals * 20; // Continuously add 20 Pesos per 10 seconds
+                                
+                            } // For Testing Purposes
+                            
+                        /*  Duration duration = Duration.between(parkedAt, now);
+                            long totalMinutes = duration.toMinutes();
+                            long allowedMinutes = 60; // 1 hours
+                            double penalty = 0;
+
+                            if (totalMinutes > allowedMinutes) {
+                                long excessMinutes = totalMinutes - allowedMinutes;
+                                long intervals = (long) Math.ceil(excessMinutes / 60.0);
+                                penalty = intervals * 20; // ₱20 per excess hour 
+                                
+                        	} */ // For Actual System
+                            
                             // removes vehicle from the slot if chosen the option "Yes" refer to line 100
                             if (confirm == JOptionPane.YES_OPTION) {
 
@@ -141,7 +179,9 @@ public class SlotSelectionPanel extends JPanel {
 
                                 JOptionPane.showMessageDialog(
                                         slotButton,
-                                        "Slot successfully freed.",
+                                        "Slot successfully freed." +
+                                        "\nFreed at: " + formattedDateTime + 
+                                        "\nPenalty for exceeding time: " + penalty,
                                         "Removed",
                                         JOptionPane.INFORMATION_MESSAGE
                                 );
