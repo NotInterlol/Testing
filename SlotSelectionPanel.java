@@ -2,6 +2,8 @@ package parking;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class SlotSelectionPanel extends JPanel {
 
@@ -72,18 +74,29 @@ public class SlotSelectionPanel extends JPanel {
                         		paid = true;
                         	} else {
                         		// Payment process for regular users
-                           	 	paid = ParkingFee.processPayment(UserSession.getUser(), ParkingFee.getFee(type)); // Calls parking fee to check if the payment is processed
+                           	 	paid = ParkingFee.processPayment(
+                           	 			UserSession.getUser(), 
+                           	 			ParkingFee.getFee(type)
+                           	 			); // Calls parking fee to check if the payment is processed
                         	}
                          	// Confirms if the payment was successful or not
                          	if (paid) {
                                  // Occupy slot after payment
                                  SlotManager.occupySlot(type, slotNumber, UserSession.getUser());
                                  updateSlotColor(slotButton, type, slotNumber);
+                                                         
+                                 // Added Timestamp to determine when the parking slot was taken
+                                 LocalDateTime now = LocalDateTime.now();
+                                 DateTimeFormatter formatter =
+                                         DateTimeFormatter.ofPattern("h:mm a 'on' MMMM d, yyyy");
+                                 String formattedDateTime = now.format(formatter);
                                  
                                  // Gives out ticket after successful payment
                                  JOptionPane.showMessageDialog(
                                          slotButton,
-                                         "You have received a parking ticket. Please keep it for reference.",
+                                         "You have received a parking ticket for " + type + " Slot " + slotNumber +
+                                         "\nTaken at: " + formattedDateTime +
+                                         "\n\nPlease keep it for reference.",
                                          "Parking Ticket",
                                          JOptionPane.INFORMATION_MESSAGE
                                  );
