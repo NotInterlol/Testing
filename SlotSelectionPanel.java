@@ -118,6 +118,7 @@ public class SlotSelectionPanel extends JPanel {
                     else if (mode == SlotManager.Mode.REMOVE) {
                         if (SlotManager.isOccupied(type, slotNumber)) {
                         	 ParkingSlot slot = SlotManager.getSlot(type, slotNumber);
+                            // Denies configuration for other users
                              if (!UserSession.isAdmin() && !slot.getOwner().equals(UserSession.getUser())) {
                                  JOptionPane.showMessageDialog(
                                      slotButton,
@@ -211,3 +212,4 @@ public class SlotSelectionPanel extends JPanel {
         }
     }
 }
+
