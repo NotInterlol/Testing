@@ -182,7 +182,7 @@ public class SlotSelectionPanel extends JPanel {
                                 	    slotButton,
                                 	    "Slot successfully freed." +
                                 	    "\nFreed at: " + formattedDateTime + 
-                                	    (!UserSession.isAdmin() ? "\nPenalty for exceeding time: " + penalty : ""),
+                                	    (!UserSession.isAdmin() ? "\nPenalty for exceeding time: " + String.format("%.2f", penalty) : ""),
                                 	    "Removed",
                                 	    JOptionPane.INFORMATION_MESSAGE
                                 	);
