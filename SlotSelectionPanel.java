@@ -160,18 +160,6 @@ public class SlotSelectionPanel extends JPanel {
 	                                
 	                            } // For Testing Purposes
                             
-                        /*  Duration duration = Duration.between(parkedAt, now);
-                            long totalMinutes = duration.toMinutes();
-                            long allowedMinutes = 60; // 1 hours
-                            double penalty = 0;
-
-                            if (totalMinutes > allowedMinutes) {
-                                long excessMinutes = totalMinutes - allowedMinutes;
-                                long intervals = (long) Math.ceil(excessMinutes / 60.0);
-                                penalty = intervals * 20; // ₱20 per excess hour 
-                                
-                        	} */ // For Actual System
-                            
                             // removes vehicle from the slot if chosen the option "Yes" refer to line 100
                             if (confirm == JOptionPane.YES_OPTION) {
 
@@ -231,3 +219,4 @@ public class SlotSelectionPanel extends JPanel {
         }
     }
 }
+
