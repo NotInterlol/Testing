@@ -136,86 +136,30 @@ public class SlotSelectionPanel extends JPanel {
                                     JOptionPane.YES_NO_OPTION
                             );
                             
-                            // Added Timestamp to determine when the parking slot was freed;                            
-                            slot = SlotManager.getSlot(type, slotNumber);
+                            // Added Timestamp to determine when the parking slot was freed;
                             
-                            
-                            LocalDateTime parkedAt = slot.getParkedAt(); // retrieves from slot manager when vehicle was parked/freed
-                            LocalDateTime now = LocalDateTime.now(); // Checks the local time
+                            LocalDateTime now = LocalDateTime.now();
                             DateTimeFormatter formatter =
-                                    DateTimeFormatter.ofPattern("h:mm a 'on' MMMM d, yyyy"); // Shows when the parking/unparking occurred
-                            String formattedDateTime = now.format(formatter); // Converts into String
-                                                      
-                            // Penalty Calculation
-                            Duration duration = Duration.between(parkedAt, now); // Calculates when the parking occurred compared to now
+                                    DateTimeFormatter.ofPattern("h:mm a 'on' MMMM d, yyyy");
+                            String formattedDateTime = now.format(formatter);
                             
-	                            long allowedSeconds = 10; // Penalty After 10 Seconds
-	                            long totalSeconds = duration.getSeconds(); 
-	                            double penalty = 0;
+                            if (confirm == JOptionPane.YES_OPTION) {
 
-								// Checks if user is admin or customer and applies penalty payment if the user is customer
-	                            if (!UserSession.isAdmin() && totalSeconds > allowedSeconds) {
-	                                long excessSeconds = totalSeconds - allowedSeconds;
-	                                long intervals = (long) Math.ceil(excessSeconds / 10.0);
-	                                penalty = intervals * 20; // Continuously add 20 Pesos per 10 seconds
-	                                
-	                                // Manual payment input
-	                                boolean validPayment = false;
-	                                while (!validPayment) {
-	                                    String input = JOptionPane.showInputDialog(
-	                                            slotButton,
-	                                            "Your penalty for exceeding time is ₱" + String.format("%.2f", penalty) +
-	                                                    "\nPlease enter the amount to pay:"
-	                                    );
-	                                    
-	                                    // Force users to pay through looping                                 
-	                                    if (input == null) {
-	                                        JOptionPane.showMessageDialog(
-	                                                slotButton,
-	                                                "You must pay the penalty to unpark your vehicle.",
-	                                                "Payment Required",
-	                                                JOptionPane.WARNING_MESSAGE
-	                                        );
-										
-	                                    } else {
-	                                        try {
-	                                            double paidAmount = Double.parseDouble(input);
-	                                            if (paidAmount >= penalty) {
-	                                                validPayment = true;
-	                                                double change = paidAmount - penalty; // calculate change if overpaid
-	                                                String message = "Payment of ₱" + String.format("%.2f", paidAmount) + " accepted.";
-	                                                if (change > 0) {
-	                                                    message += "\nYour change: ₱" + String.format("%.2f", change);
-	                                                }
-	                                                JOptionPane.showMessageDialog(
-	                                                        slotButton,
-	                                                        message,
-	                                                        "Payment Successful",
-	                                                        JOptionPane.INFORMATION_MESSAGE
-	                                                );
-												// Check if the user paid the necessary amount
-	                                            } else {
-	                                                JOptionPane.showMessageDialog(
-	                                                        slotButton,
-	                                                        "The amount entered is less than the penalty. Please enter at least ₱" + String.format("%.2f", penalty),
-	                                                        "Insufficient Payment",
-	                                                        JOptionPane.WARNING_MESSAGE
-	                                                );
-	                                            }
-												
-											// Error handler for incorrect inputs
-	                                        } catch (NumberFormatException ex) {
-	                                            JOptionPane.showMessageDialog(
-	                                                    slotButton,
-	                                                    "Invalid input. Please enter a number.",
-	                                                    "Invalid Input",
-	                                                    JOptionPane.WARNING_MESSAGE
-	                                            );
-	                                        }
-	                                    }
-	                                } 
-	                            }
-                          
+                                // Call penalty calculation & manual payment
+                                ParkingFee.collectPenalty(UserSession.getUser(), slot.getParkedAt(), 10, slotButton);
+
+                                SlotManager.freeSlot(type, slotNumber);
+                                updateSlotColor(slotButton, type, slotNumber);
+
+                                JOptionPane.showMessageDialog(
+                                        slotButton,
+                                        "Slot successfully freed." +
+                                                "\nFreed at: " + formattedDateTime,
+                                        "Removed",
+                                        JOptionPane.INFORMATION_MESSAGE
+                                );
+                            }            
+                            
                             // removes vehicle from the slot if chosen the option "Yes" refer to line 100
                             if (confirm == JOptionPane.YES_OPTION) {
 
@@ -274,4 +218,3 @@ public class SlotSelectionPanel extends JPanel {
         }
     }
 }
-
