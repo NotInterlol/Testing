@@ -28,7 +28,7 @@ public class ParkingSlot {
     void occupy(User user) {
         occupied = true;
         owner = user;
-        parkedAt = LocalDateTime.now();
+        parkedAt = LocalDateTime.now(); // saves the time when the vehicle was parked/freed
     } // Assigns that the slot is occupied
     
     public LocalDateTime getParkedAt() {
@@ -38,6 +38,6 @@ public class ParkingSlot {
     void free() {
         occupied = false;
         owner = null;
-        parkedAt = null;
+        parkedAt = null; 
     } // Assigns that the slot is free for taking
 }
