@@ -9,7 +9,7 @@ public class LoginPanel extends JPanel {
 		
 		/* --------- SWING LIBRARY ASSIGNMENT --------- */
 		
-		JLabel title = new JLabel("Hotel Parking System Login", JLabel.CENTER);
+		JLabel title = new JLabel("Parking System Login", JLabel.CENTER);
 		JLabel userLabel = new JLabel("Username:");
 		JLabel passLabel = new JLabel("Password:");
 		JTextField usernameField = new JTextField();
