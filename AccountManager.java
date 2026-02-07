@@ -4,8 +4,8 @@ public class AccountManager {
 	// Inserted accounts
    private static final User[] users = {
            new User("Earhl", "leader123", "ADMIN"),
-           new User("Sydney", "manager123", "USER"),
-           new User("Wylle", "client123", "USER")
+           new User("Sydney", "manager123", "CUSTOMER"),
+           new User("Wylle", "client123", "CUSTOMER")
    };
    
    // Account Verification
@@ -19,4 +19,5 @@ public class AccountManager {
        return null;
    }
 }
+
 
