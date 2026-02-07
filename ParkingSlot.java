@@ -1,10 +1,13 @@
 package parking;
 
+import java.time.LocalDateTime;
+
 public class ParkingSlot {
 
     private final int slotNumber;
     private boolean occupied;
     private User owner;
+    private LocalDateTime parkedAt;
 
     public ParkingSlot(int slotNumber) {
         this.slotNumber = slotNumber;
@@ -25,10 +28,16 @@ public class ParkingSlot {
     void occupy(User user) {
         occupied = true;
         owner = user;
+        parkedAt = LocalDateTime.now();
     } // Assigns that the slot is occupied
+    
+    public LocalDateTime getParkedAt() {
+        return parkedAt;
+    } // Checks when and where the user is parked
 
     void free() {
         occupied = false;
         owner = null;
+        parkedAt = null;
     } // Assigns that the slot is free for taking
 }
